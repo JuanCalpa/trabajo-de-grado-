@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 2025/04/07-14:53:54.683 28f8 Reusing MANIFEST C:\Users\Usuario\Documents\trabajo-de-grado-\Objetivos\Primer objetivo\cache\path1\Session Storage/MANIFEST-000001
 2025/04/07-14:53:54.696 28f8 Recovering log #3
 2025/04/07-14:53:54.697 28f8 Reusing old log C:\Users\Usuario\Documents\trabajo-de-grado-\Objetivos\Primer objetivo\cache\path1\Session Storage/000003.log 
+=======
+2025/03/31-19:15:53.867 1f6c Reusing MANIFEST D:\Repositorio\trabajo-de-grado-\Objetivos\Primer objetivo\cache\path1\Session Storage/MANIFEST-000001
+2025/03/31-19:15:53.868 1f6c Recovering log #3
+2025/03/31-19:15:53.868 1f6c Reusing old log D:\Repositorio\trabajo-de-grado-\Objetivos\Primer objetivo\cache\path1\Session Storage/000003.log 
+>>>>>>> 99270885aa7ddb7e4d7c6308fa45b76a61753813
