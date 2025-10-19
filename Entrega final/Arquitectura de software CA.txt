@@ -1,0 +1,124 @@
+workspace "Calidad del aire" "Plataforma para monitoreo de la calidad del aire" {
+
+    !identifiers hierarchical
+
+    model {
+        // Personas
+        investigador = person "Investigador" "Persona destinada a recopilar y analizar infromación sobre la calidad del aire en relación con material particulado"
+        invitado = person "Invitado" "Persona que consulta de manera visual la calidad del aire."
+
+        // Sistema principal
+        cdSystem = softwareSystem "Calidad del aire" "Plataforma para visualizar información sobre la caldiad del aire." {
+            
+            // Contenedor Frontend
+            frontend = container "Frontend (React)" "Interfaz web-móvil responsiva usada por investigadores e invitados." "React" {
+                tags "Frontend"
+            }
+            
+            // Contenedor Backend
+            backend = container "Backend" "Expone APIs REST y lógica de negocio" "NodeJS" {
+                
+                appointmentController = component "AppointmentController" "Expone endpoints REST para gestionar citas." "Spring MVC"
+                appointmentService = component "AppointmentService" "Contiene la lógica de negocio para asignar citas." "Spring Bean"
+                appointmentRepository = component "AppointmentRepository" "Accede a la base de datos de citas." "Spring Data JPA"
+                epsAdapter = component "EpsAdapter" "Se comunica con el sistema heredado EPS para verificar afiliación." "Spring Bean"
+                notificationService = component "NotificationService" "Envía correos de confirmación de citas." "Spring Bean"
+
+            
+            }
+            
+            // Base de datos calidad del aire
+            caDB = container "Base de Datos sobre la calidad del aire" "Almacena la información de las variables utilizadas para analizar la calidad del aires." "MongoDB" {
+                tags "Database"
+            }
+            
+
+        }
+
+        // Relaciones
+        investigador -> cdSystem "Realiza consultas específicas sobre la calidad del aire"
+        invitado -> cdSystem "Realiza consultas generales sobre la calidad del aire"
+        cdSystem.frontend -> cdSystem.backend "Consume API REST"
+        cdSystem.backend -> cdSystem.caDB "Lee y escribe datos sobre la calidad del aire"
+        
+        cdSystem.frontend ->  cdSystem.backend.appointmentController "Consume API REST"
+        cdSystem.backend.appointmentController -> cdSystem.backend.appointmentService "Invoca lógica de negocio"
+        cdSystem.backend.appointmentService -> cdSystem.backend.appointmentRepository "Lee y escribe citas"
+        cdSystem.backend.appointmentService -> cdSystem.backend.epsAdapter "Consulta afiliación EPS"
+        cdSystem.backend.appointmentService -> cdSystem.backend.notificationService "Envía notificación al paciente"
+        cdSystem.backend.appointmentRepository -> cdSystem.caDB "Persiste citas"
+
+    }
+
+    views {
+        systemContext cdSystem "Contexto" {
+            include *
+            autolayout lr
+        }
+
+        container cdSystem "Contenedores" {
+            include *
+            autolayout lr
+        }
+        
+         // Nivel 3: Componentes (solo del backend)
+        component cdSystem.backend {
+            include *
+            autolayout lr
+        }
+
+
+        styles {
+            element "Person" {
+                shape person
+                color #7DB167
+                stroke #7DB167
+                strokeWidth 4
+            }
+
+            element "Software System" {
+                shape roundedbox
+                color #1168BD
+                stroke #1168BD
+                strokeWidth 4
+            }
+
+            element "Legacy" {
+                shape roundedbox
+                color #FF0000
+                stroke #FF0000
+                strokeWidth 4
+            }
+            
+            element "Container" {
+                shape roundedbox
+                stroke #0B6623
+                strokeWidth 3
+            }
+
+            element "Frontend" {
+                shape webbrowser
+                stroke #1168BD
+                strokeWidth 4
+            }
+
+            element "Backend" {
+    		icon "https://www.svgrepo.com/show/499814/server.svg"
+    		stroke #1168BD
+    		strokeWidth 7
+            }
+            
+            element "Component" {
+                shape component
+                stroke #1168BD
+                strokeWidth 4
+            }
+            
+            element "Database" {
+                shape cylinder
+                color #1168BD
+                strokeWidth 4
+            }
+        }
+    }
+}
