@@ -220,11 +220,20 @@ void loop() {
 
     // obtiene la informacion del sensor de CO
     adc_MQ = analogRead(pin_MQ);
+    // Depuración
+    Serial.print("ADC MQ: ");
+    Serial.println(adc_MQ);
 
-    //converite a ppm
-    CO = (float)adc_MQ * 4.28 * 1.3601 / 4095;
-    CO = 0.918 * (4.28 - CO) / (CO * (4.28 - 0.918));
-    CO = 103.3478 * pow(CO, -1.4808);
+    // conversión de tensión en voltios
+float Vrl = (adc_MQ * 4.28) / 4095.0;
+
+// si el valor es muy bajo o nulo, evitar NaN
+if (Vrl <= 0.1) {
+  CO = 0; // o algún valor base
+} else {
+  float ratio = 0.918 * (4.28 - Vrl) / (Vrl * (4.28 - 0.918));
+  CO = 103.3478 * pow(ratio, -1.4808);
+}
 
     //obtiene los datos de material particulado
     while (mySerial.available()) {
@@ -400,7 +409,17 @@ void initWifi() {
  void enviarDatosPorHTTP() {
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    CO=0;
+
+
+    struct tm timeinfo;
+    if (getLocalTime(&timeinfo)) {
+      char tempChar[20];
+      strftime(tempChar, sizeof(tempChar), "%Y-%m-%d %H:%M:%S", &timeinfo);
+      formattedTimeString = String(tempChar);
+    } else {
+      formattedTimeString = "0000-00-00 00:00:00";
+    }
+
     // Construye la URL completa del endpoint
     String url = String("http://") + apiServerIP + ":" + apiServerPort + apiEndpoint;
     
