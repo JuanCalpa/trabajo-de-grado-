@@ -25,7 +25,7 @@
 #define WIFI_PASSWORD "admin123"
 
 // *** CONFIGURACIÓN DE LA BASE DE DATOS MONGO ***
-const char* apiServerIP = "10.53.231.45"; // ¡LA IP DE TU PC DONDE CORRE EL SERVIDOR NODE.JS!
+const char* apiServerIP = "10.216.187.45"; // ¡LA IP DE TU PC DONDE CORRE EL SERVIDOR NODE.JS!
 const int apiServerPort = 3000;             // El puerto de tu servidor Node.js
 const char* apiEndpoint = "/api/datos";
 
